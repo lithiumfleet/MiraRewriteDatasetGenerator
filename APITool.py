@@ -1,4 +1,6 @@
 import os
+from typing import TypeAlias
+from dataclasses import dataclass
 from openai import OpenAI
 
 # Options
@@ -8,13 +10,19 @@ class Opt:
     dataset:list = []
 
 class Msg:
-    role: str
-    content: str
+    def __init__(self, role:str, content:str):
+        self.role = role
+        self.content = content
+
+    def __repr__(self) -> str:
+        return f"\n{self.role}: {self.content}\n"
+
+Messages: TypeAlias = list[Msg]
 
 def create_client() -> OpenAI:
     return OpenAI(api_key=Opt.apikey, base_url=Opt.baseurl)
 
-def chat(client:OpenAI, question:str, history:list[Msg]=[], temperature=0.0, sys_prompt:str|None=None) -> tuple[str, list]:
+def chat(client:OpenAI, question:str, history:Messages=[], temperature=0.0, sys_prompt:str|None=None) -> tuple[str, Messages]:
     if sys_prompt is not None:
         history.append({"role":"system", "content":sys_prompt})
     history.append({"role":"user", "content":question})

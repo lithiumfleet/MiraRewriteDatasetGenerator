@@ -1,5 +1,6 @@
 from decimal import Clamped
 from functools import cache
+import select
 import sqlite3
 from typing import Any, Protocol
 import random
@@ -38,5 +39,5 @@ class SQliteDB:
         return res.fetchone()[0]
 
     @classmethod
-    def connect_db(cls, db_path:str) -> DatabaseLike:
-        return SQliteDB(db_path)
+    def connect_db(cls, db_path:str) -> 'SQliteDB':
+        return cls(db_path)
